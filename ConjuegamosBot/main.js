@@ -1,7 +1,13 @@
+/* Packages */
+
 const {readFileSync, promises: fsPromises} = require('fs');
 const puppeteer = require('puppeteer');
 
+/* Generics */
+
 function sleep(ms) {return new Promise(resolve => setTimeout(resolve, ms));};
+
+/* Getting Settings Data (temporary until gui is finished) */
 
 var Settings = [];
 var settingData = readFileSync('settings.txt','utf-8');
@@ -13,13 +19,21 @@ Settings['On'] = settingData_Split[2];
 Settings['Max'] = settingData_Split[3];
 
 async function start(text) {
+  /* Establishing Connection */
+
   var browser = await puppeteer.launch({headless: false});
   var page = await browser.newPage();
+
+  /* Logging in */
+
   await page.goto("https://conjuguemos.com/auth/login/", {waitUntil: 'networkidle0'});
   await page.type("#identity",Settings['Username']);
   await page.type("#password",Settings['Password']);
   await page.type("#password","\n");
   await page.goto("https://conjuguemos.com/student/activities", {waitUntil: 'networkidle0'});
+
+  /* Scraping Vocab Lists */
+
   var vocab_lists = await page.evaluate(() => {
     var final = [];
     var Vocab_lists_index = document.getElementsByClassName("js-filter-text");
@@ -30,8 +44,14 @@ async function start(text) {
     };
     return final;
   });
+
+  /* Finding the List's ID */
+
   var vocab_list_id = 0;
   for (list of vocab_lists) {if (list[0] == text) {vocab_list_id = list[2]}}
+
+  /* Getting the list's Vocab Answers */
+
   await page.goto("https://conjuguemos.com/vocabulary/print_flashcards/" + vocab_list_id, {waitUntil: 'networkidle0'});
   var Vocab_List = await page.evaluate(() => { 
     var final2 = [];
@@ -45,12 +65,18 @@ async function start(text) {
     };
     return final2;
   });
+
+  /* Starting the assignment */
+
   await page.goto("https://conjuguemos.com/vocabulary/homework/" + vocab_list_id, {waitUntil: 'networkidle0'});
   var temp = await page.evaluate(() => {return document.getElementsByClassName("btn--start-gp btn")[0].id = "botclickme"});
   await sleep(1000);
   await page.click("#botclickme");
   await sleep(3000);
   var __loopIndex = 0;
+
+  /* Initializing the bot */
+
   async function loop() {
     var question_input = await page.evaluate(() => {return document.querySelector("#question-input").innerHTML});
     var final_answer = "";
@@ -65,5 +91,7 @@ async function start(text) {
   };
   loop();
 };
+
+/* Starting */
+
 start(Settings['On']);
-/*lol 69 lines */
