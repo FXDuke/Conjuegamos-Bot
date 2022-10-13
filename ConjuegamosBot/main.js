@@ -31,8 +31,7 @@ async function start(text) {
 
   await page.goto("https://conjuguemos.com/auth/login/", {waitUntil: 'networkidle0'});
   await page.type("#identity",Settings['Username']);
-  await page.type("#password",Settings['Password']);
-  await page.type("#password","\n");
+  await page.type("#password",Settings['Password'] + "\n");
   await page.goto("https://conjuguemos.com/student/activities", {waitUntil: 'networkidle0'});
 
   /* Scraping Vocab Lists */
@@ -84,8 +83,7 @@ async function start(text) {
     const question_input = await page.evaluate(() => {return document.querySelector("#question-input").innerHTML});
     var final_answer = "";
     for (vocab_data of Vocab_List) {if (vocab_data[0]==question_input) {final_answer=vocab_data[1]};};
-    await page.type("#answer-input",final_answer);
-    await page.type("#answer-input","\n");
+    await page.type("#answer-input",final_answer + "\n");
     const maxwanted_2 = (Settings['Max']!=null) ? Settings['Max']-1 : __loopIndex + 1;
     if (__loopIndex<maxwanted_2) {
       loop();
