@@ -71,7 +71,7 @@ async function start(text,time) {
   });
 
   /* Starting the assignment */
-  
+
   let time_to_wait = 0;
   await page.goto("https://conjuguemos.com/vocabulary/homework/" + vocab_list_id, {waitUntil: 'networkidle0'});
   var temp = await page.evaluate(() => {return document.getElementsByClassName("btn--start-gp btn")[0].id = "botclickme"});
@@ -97,27 +97,27 @@ async function start(text,time) {
     if (__loopIndex<__maxwanted) {
       __loopIndex++;
     } else {
-      time_to_wait = (time*1000*60)-((current.getSeconds()-old.getSeconds())*1000)
+      time_to_wait = (time*1000*60)-((current.getSeconds()-old.getSeconds())*1000);
       break;
     };
   };
 
   /* Saving the score */
 
-  await sleep(time_to_wait + 1500)
+  await sleep(time_to_wait + 1500);
   var temp2 = await page.evaluate(() => {
     for (button of document.getElementsByClassName("btn")) {
       if (button.innerHTML == "Save") {
-        button.id = "newbuttonbotclick"
+        button.id = "newbuttonbotclick";
       };
     };
-    return document.getElementById("newbuttonbotclick")
+    return document.getElementById("newbuttonbotclick");
   });
-  await page.click("#newbuttonbotclick")
+  await page.click("#newbuttonbotclick");
 
   /* Closing */
 
-  await browser.close()
+  await browser.close();
 };
 
 /* Starting */
