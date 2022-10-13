@@ -22,17 +22,17 @@ async function start(text) {
     await page.goto("https://conjuguemos.com/student/activities", {waitUntil: 'networkidle0',});
     var vocab_lists = await page.evaluate(() => {
       var final = [];
-      var a = document.getElementsByClassName("js-filter-text");
+      var Vocab_lists_index = document.getElementsByClassName("js-filter-text");
       var __Index = 0;
-      for (b of a) {
-        final[__Index] = [b.innerHTML.split("\t")[7],b.href,b.href.split("/")[b.href.split("/").length-1]];
+      for (List_data of Vocab_lists_index) {
+        final[__Index] = [List_data.innerHTML.split("\t")[7],List_data.href,List_data.href.split("/")[List_data.href.split("/").length-1]];
         __Index++;
       }
       return final;
    })
-    var aab = 0;
-    for (ba of vocab_lists) {if (ba[0] == text) {aab = ba[2]}}
-    await page.goto("https://conjuguemos.com/vocabulary/print_flashcards/" + aab, {waitUntil: 'networkidle0',})
+    var vocab_list_id = 0;
+    for (list of vocab_lists) {if (list[0] == text) {vocab_list_id = list[2]}}
+    await page.goto("https://conjuguemos.com/vocabulary/print_flashcards/" + vocab_list_id, {waitUntil: 'networkidle0',})
     var Vocab_List = await page.evaluate(() => { 
     var final2 = [];
     var question = document.getElementsByClassName("qWord")
@@ -45,17 +45,17 @@ async function start(text) {
     }
     return final2;
    })
-    await page.goto("https://conjuguemos.com/vocabulary/homework/" + aab, {waitUntil: 'networkidle0',})
-    var ab = await page.evaluate(() => {return document.getElementsByClassName("btn--start-gp btn")[0].id = "clickmedaddy"})
+    await page.goto("https://conjuguemos.com/vocabulary/homework/" + vocab_list_id, {waitUntil: 'networkidle0',})
+    var temp = await page.evaluate(() => {return document.getElementsByClassName("btn--start-gp btn")[0].id = "botclickme"})
     await sleep(1000)
-    await page.click("#clickmedaddy")
-    await sleep(5000)
+    await page.click("#botclickme")
+    await sleep(3000)
     var __loopIndex = 0;
     async function loop() {
-    var ab2 = await page.evaluate(() => {return document.querySelector("#question-input").innerHTML})
-    var ab3 = "";
-    for (b of Vocab_List) {if (b[0]==ab2) {ab3=b[1]}}
-    await page.type("#answer-input",ab3)
+    var question_input = await page.evaluate(() => {return document.querySelector("#question-input").innerHTML})
+    var final_answer = "";
+    for (vocab_data of Vocab_List) {if (vocab_data[0]==question_input) {final_answer=vocab_data[1]}}
+    await page.type("#answer-input",final_answer)
     await page.type("#answer-input","\n")
     var maxwanted_2 = (Settings['Max']!=null) ? Settings['Max']-1 : __loopIndex + 1
     if (__loopIndex<maxwanted_2) {
