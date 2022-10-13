@@ -18,7 +18,10 @@ Settings['Password'] = settingData_Split[1];
 Settings['On'] = settingData_Split[2];
 Settings['Max'] = settingData_Split[3];
 
+/* Main Function (start) */
+
 async function start(text) {
+
   /* Establishing Connection */
 
   var browser = await puppeteer.launch({headless: false});
@@ -78,12 +81,12 @@ async function start(text) {
   /* Initializing the bot */
 
   async function loop() {
-    var question_input = await page.evaluate(() => {return document.querySelector("#question-input").innerHTML});
+    const question_input = await page.evaluate(() => {return document.querySelector("#question-input").innerHTML});
     var final_answer = "";
     for (vocab_data of Vocab_List) {if (vocab_data[0]==question_input) {final_answer=vocab_data[1]};};
     await page.type("#answer-input",final_answer);
     await page.type("#answer-input","\n");
-    var maxwanted_2 = (Settings['Max']!=null) ? Settings['Max']-1 : __loopIndex + 1;
+    const maxwanted_2 = (Settings['Max']!=null) ? Settings['Max']-1 : __loopIndex + 1;
     if (__loopIndex<maxwanted_2) {
       loop();
       __loopIndex++;
