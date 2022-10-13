@@ -15,7 +15,7 @@ Settings['Max'] = settingData_Split[3];
 async function start(text) {
   var browser = await puppeteer.launch({headless: false});
   var page = await browser.newPage();
-  await page.goto("https://conjuguemos.com/auth/login/", {waitUntil: 'networkidle0',});
+  await page.goto("https://conjuguemos.com/auth/login/", {waitUntil: 'networkidle0'});
   await page.type("#identity",Settings['Username']);
   await page.type("#password",Settings['Password']);
   await page.type("#password","\n");
